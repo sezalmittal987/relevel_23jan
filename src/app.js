@@ -21,7 +21,9 @@ app.listen(
 
 // fetch all the required routes here
 let userRouter = require('./routes/user');
+let ShortUrlRouter = require('./routes/shortUrl');
 
 //define root routes here
-app.use('/user', userRouter);
+app.use(userRouter);
+app.use(ShortUrlRouter);
 

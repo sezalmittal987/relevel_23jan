@@ -15,13 +15,9 @@ module.exports = {
 		local: {
 			host: "127.0.0.1",
 			user: "sezal",
-			password: "",
+			password: "SEZA7439",
 			database: "testbe1"
 		},
-	},
-	userType: {
-		user: 1,
-		vendor: 2
 	},
 	secretKey: 'relevel'
 };

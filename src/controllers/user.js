@@ -3,6 +3,8 @@ const User = require('../models/User');
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 
+let saltRounds = 10;
+let secretKey = 'relevel';
 module.exports = {
 
     login: function (req, res) {
@@ -83,14 +85,14 @@ module.exports = {
 							responseData.msg ="Successfully Signup Up";
 							const userData = {
 								username: data.username,
-								userId: result2[0].insertId
+								userId: result2.insertId
 							}
 							const token = jwt.sign(userData, secretKey, {
 								expiresIn: "1h"
 							});
 							responseData.data = {
 								username: data.username,
-								userId: result2[0].insertId,
+								userId: result2.insertId,
 								token
 							};
 							return res.status(httpCodes.success).send(responseData);

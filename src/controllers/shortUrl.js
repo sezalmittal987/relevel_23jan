@@ -29,7 +29,7 @@ module.exports = {
 			success: false,
 			msg: "Invalid parameters!"
 		};
-        var data;
+        var data = {};
         data.url = req.query.url;
         data.userId = req.userData.userId;
         if(!data.userId || ! data.url) return res.status(httpCodes.badRequest).send(responseData);
@@ -39,8 +39,8 @@ module.exports = {
                 return res.status(httpCodes.internalServerError).send(responseData);
             }
             else if( result.length > 0 ) {
-                responseData.url = result[0];
-                responseData.message = "URL has been created earlier!";
+                responseData.data = result[0];
+                responseData.msg = "URL has been created earlier!";
                 responseData.success = true;
                 return res.status(httpCodes.success).send(responseData);
             }
@@ -50,14 +50,14 @@ module.exports = {
                         responseData.msg = "Error in connecting to database";
                         return res.status(httpCodes.internalServerError).send(responseData);
                     }
-                    data.hash = hash;
+                    data.hash = result1;
                     ShortUrl.createUrl(data, ( err2, result2 )=>{
                         if( err2 ) {
                             responseData.msg = "Failed to create short URL";
                             return res.status(httpCodes.internalServerError).send(responseData);
                         }
                         responseData.msg = "new URL created!";
-                        responseData.url = result2[0];
+                        responseData.shortUrl = "localhost:8080/" + result1;
                         responseData.success = true;
                         return res.status(httpCodes.success).send(responseData);
                     })
@@ -71,6 +71,7 @@ module.exports = {
 			success: false,
 			msg: "Invalid params!"
 		};
+        var data = {};
         data.userId = req.userData.userId;
         if(!data.userId) return res.status(httpCodes.badRequest).send(responseData);
         ShortUrl.getAllUrlsForUser(data, (err, result) => {
@@ -120,11 +121,12 @@ module.exports = {
 
     },
 
-    directUrl : function ( req, res ){
+    redirectUrl : function ( req, res ){
         var responseData = {
 			success: false,
 			msg: "Invalid parameters!"
 		};
+        var data = {};
         data.shortUrl = req.params.code;
         data.userId = req.userData.userId;
         if( !data.shortUrl || !data.userId ) return res.status(httpCodes.badRequest).send(responseData);
@@ -139,8 +141,9 @@ module.exports = {
                 return res.status(httpCodes.badRequest).send(responseData);
             }
             else{
-                responseData.msg = true;
-                return res.status(httpCodes.success).redirect(result[0].url);
+                responseData.success = true;
+                responseData.msg = `Redirecting to ${result[0].url}`;
+                return res.status(httpCodes.success).redirect(`http://${result[0].url}`);
             }
         })
     }

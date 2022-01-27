@@ -9,8 +9,9 @@ module.exports = {
             var values = [];
             values.push(hash);
             sqlConnection.executeQuery(sql, values, function(err, result) {
-                if(err) resolve(500);
-                else resolve(result);
+                if(err ) resolve(500);
+                else if (result.length > 0 ) resolve(false);
+                else resolve(true);
             });
         })
     },
@@ -37,7 +38,7 @@ module.exports = {
     },
 
     getAllUrlsForUser : function (data, callback){
-        var sql = "SELECT * FROM ShortUrls WHERE userId = ? ";
+        var sql = "SELECT * FROM ShortUrls WHERE userId = ?";
 		var values = [];
         values.push(data.userId);
 		sqlConnection.executeQuery(sql, values, function(err, result) {
